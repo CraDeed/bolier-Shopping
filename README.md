@@ -19,5 +19,7 @@ React와 Node로 만든 여행 쇼핑몰 입니다
 ### 게시글 수정 기능:
 원래 게시글 데이터를 DetailPage에서 받아서 useHistory을 통해 페이지 이동과 state를 전달하여 UploadPage에서 수정 시엔 useLocation으로 받은 state를 이용 기존 정보 출력 <br />
 
+![update](https://user-images.githubusercontent.com/56147655/111593891-ca01cc80-880d-11eb-9bc1-4323b8a47a0c.gif)
+
 useHistory, useLocation으로 페이지 이동간 state 전달 할 수 있다 <br/>
 더 나은 방법이 있다면 코멘트 부탁합니다!
