@@ -22,4 +22,13 @@ React와 Node로 만든 여행 쇼핑몰 입니다
 ![update](https://user-images.githubusercontent.com/56147655/111593891-ca01cc80-880d-11eb-9bc1-4323b8a47a0c.gif)
 
 useHistory, useLocation으로 페이지 이동간 state 전달 할 수 있다 <br/>
+
+### 게시글 삭제 기능:
+삭제 구현, 만일 어떤 유저의 장바구니에 삭제하려는 상품이 있다면 해당 상품 삭제시 유저의 장바구니 안 상품도 삭제하도록 구현
+
+
+
+
+
+
 더 나은 방법이 있다면 코멘트 부탁합니다!
