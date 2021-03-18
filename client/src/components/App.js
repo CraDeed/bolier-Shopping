@@ -42,6 +42,11 @@ function App() {
                     />
                     <Route
                         exact
+                        path="/product/modify/:productId"
+                        component={Auth(UploadProductPage, true)}
+                    />
+                    <Route
+                        exact
                         path="/product/:productId"
                         component={Auth(DetailProductPage, null)}
                     />

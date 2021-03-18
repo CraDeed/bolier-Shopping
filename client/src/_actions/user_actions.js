@@ -8,6 +8,7 @@ import {
     GET_CART_ITEMS,
     REMOVE_CART_ITEM,
     ON_SUCCESS_BUY,
+    UPDATE_POST,
 } from "./types";
 import { USER_SERVER } from "../components/Config.js";
 
@@ -122,6 +123,17 @@ export function onSuccessBuy(data) {
 
     return {
         type: ON_SUCCESS_BUY,
+        payload: request,
+    };
+}
+
+export function onUpdatePost(data) {
+    const request = axios
+        .patch(`/api/product`, data)
+        .then((response) => response.data);
+
+    return {
+        type: UPDATE_POST,
         payload: request,
     };
 }

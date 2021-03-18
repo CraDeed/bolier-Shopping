@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Button, Form, Input } from "antd";
 import FileUpload from "../../utils/FileUpload";
 import axios from "axios";
+import { useLocation } from "react-router";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -22,6 +23,26 @@ function UploadProductPage(props) {
     const [price, setPrice] = useState(0);
     const [continent, setContinent] = useState(1);
     const [images, setImages] = useState([]);
+    const [isEdit, setIsEdit] = useState(false);
+
+    const location = useLocation();
+
+    // console.log("typeprops", typeof location.state.productInfo.images);
+
+    useEffect(() => {
+        if (location.state) {
+            setIsEdit(true);
+            setTitle(location.state.productInfo.title);
+            setDescription(location.state.productInfo.description);
+            setPrice(location.state.productInfo.price);
+            setContinent(location.state.productInfo.continents);
+            setImages(location.state.productInfo.images);
+        }
+    }, [location.state]);
+
+    // console.log(images);
+
+    // console.log("uploadprops", props);
 
     const titleChangeHandler = (e) => {
         setTitle(e.currentTarget.value);
@@ -46,13 +67,19 @@ function UploadProductPage(props) {
     const submitHandler = () => {
         // e.preventDefault();
 
-        if (!title || !description || !price || !continent || !images) {
+        if (
+            !title ||
+            !description ||
+            !price ||
+            !continent ||
+            images.length === 0
+        ) {
             return alert("모든 값을 넣어 주셔야 합니다.");
         }
 
         // 서버에 채운 값들을 request로 보낸다.
 
-        const body = {
+        let body = {
             // 로그인 된 사람의 ID
             writer: props.user.userData._id,
             title: title,
@@ -62,14 +89,26 @@ function UploadProductPage(props) {
             continents: continent,
         };
 
-        axios.post("/api/product", body).then((response) => {
-            if (response.data.success) {
-                alert("상품 업로드에 성공 했습니다.");
-                props.history.push("/");
-            } else {
-                alert("상품 업로드에 실패 했습니다.");
-            }
-        });
+        if (isEdit) {
+            body._id = location.state.productInfo._id;
+            axios.patch("/api/product", body).then((response) => {
+                if (response.data.success) {
+                    alert("상품 수정에 성공 했습니다.");
+                    props.history.push("/");
+                } else {
+                    alert("상품 수정에 실패 했습니다.");
+                }
+            });
+        } else {
+            axios.post("/api/product", body).then((response) => {
+                if (response.data.success) {
+                    alert("상품 업로드에 성공 했습니다.");
+                    props.history.push("/");
+                } else {
+                    alert("상품 업로드에 실패 했습니다.");
+                }
+            });
+        }
     };
 
     return (
@@ -80,7 +119,16 @@ function UploadProductPage(props) {
 
             <Form onFinish={submitHandler}>
                 {/* {DropZone} */}
-                <FileUpload refreshFunction={updateImages} />
+                {isEdit ? (
+                    <FileUpload
+                        refreshFunction={updateImages}
+                        modiImage={images}
+                        isEdit={isEdit}
+                    />
+                ) : (
+                    <FileUpload refreshFunction={updateImages} />
+                )}
+
                 <br />
                 <br />
                 <label>이름</label>
@@ -111,7 +159,7 @@ function UploadProductPage(props) {
                 </select>
                 <br />
                 <br />
-                <Button htmlType="submit">확인</Button>
+                <Button htmlType="submit">{isEdit ? "수정" : "등록"}</Button>
             </Form>
         </div>
     );

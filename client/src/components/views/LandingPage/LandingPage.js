@@ -29,7 +29,7 @@ function LandingPage() {
                 if (body?.loadMore) {
                     setProducts([...products, ...response.data.productInfo]);
                 } else {
-                    console.log(body, response.data);
+                    // console.log(body, response.data);
                     setProducts(response.data.productInfo.slice(0, 8));
                 }
                 setPostSize(response.data.postSize);
@@ -62,10 +62,12 @@ function LandingPage() {
                         </a>
                     }
                 >
-                    <Card.Meta
-                        title={product.title}
-                        description={`$${product.price}`}
-                    />
+                    <a href={`/product/${product._id}`}>
+                        <Card.Meta
+                            title={product.title}
+                            description={`$${product.price}`}
+                        />
+                    </a>
                 </Card>
             </Col>
         );

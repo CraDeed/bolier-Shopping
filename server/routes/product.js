@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { Product } = require("../models/Product");
+const { User } = require("../models/User");
 
 //=================================
 //             Product
@@ -42,6 +43,33 @@ router.post("/", (req, res) => {
         }
         return res.status(200).json({ success: true });
     });
+});
+
+router.patch("/", (req, res) => {
+    Product.findOneAndUpdate(
+        {
+            _id: req.body._id,
+        },
+        {
+            $set: {
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price,
+                continents: req.body.continents,
+                images: req.body.images,
+            },
+
+            // $push: req.body.images,
+        },
+        (err) => {
+            if (err) {
+                return res.status(400).json({ success: false, err });
+            }
+            res.status(200).send({
+                success: true,
+            });
+        }
+    );
 });
 
 router.post("/products", (req, res) => {
@@ -128,6 +156,31 @@ router.get("/products_by_id", (req, res) => {
             }
             return res.status(200).send(product);
         });
+});
+
+router.delete("/products_by_id/delete", (req, res) => {
+    Product.deleteOne({ _id: req.query.id }, (err) => {
+        if (err) {
+            return res.status(400).send(err);
+        }
+        User.findOneAndUpdate(
+            { "cart.id": req.query.id },
+            {
+                $pull: {
+                    cart: {
+                        id: req.query.id,
+                    },
+                },
+            },
+            (err) => {
+                if (err) {
+                    return res.status(400).send(err);
+                }
+                return res.status(200);
+            }
+        );
+        return res.status(200);
+    });
 });
 
 module.exports = router;
